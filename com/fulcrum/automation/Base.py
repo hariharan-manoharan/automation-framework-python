@@ -5,7 +5,7 @@ from reportFactory.HtmlReportGenerator import HtmlReport
 from utils.FrameworkConfig import FrameworkConfigParser
 from utils.ExcelUtils import ExcelRunManagerAccess
 from TestParameters import TestParameters
-import Executor
+from Executor import ExecutorService
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -31,8 +31,8 @@ class Base:
             self.createAndroidDriverObject()
         self.initializeReport()
         self. collectTestInstances()
-        #self.executeTest()
-        #self.quitDriver()
+        self.executeTest()
+        self.quitDriver()
         self.generateReport()
 
     def getFrameworkConfig(self):
@@ -43,13 +43,13 @@ class Base:
         runManagerAccess = ExcelRunManagerAccess()
         testinstances = runManagerAccess.getRunManagerInfo('RunManager')
         totalTestcasesToExecute = len(testinstances)
-        self.totalTestInstanceToExecutClean = []
+        self.totalTestInstanceToExecuteClean = []
         if totalTestcasesToExecute == 0:
             print 'No testcase is marked with Execute = Yes'
         else:
             for i in range(totalTestcasesToExecute):
                 testParameters = TestParameters(testinstances[i]['TC_ID'],testinstances[i]['TEST_DESCRIPTION'],testinstances[i]['EXECUTE'])
-                self.totalTestInstanceToExecutClean.insert(i,testParameters)
+                self.totalTestInstanceToExecuteClean.insert(i,testParameters)
 
 
     def initializeReport(self):
@@ -69,8 +69,13 @@ class Base:
         Base.driver = self.androidDriverFactory.getDriver()
 
     def executeTest(self):
-        executor = Executor(self.frameworkConfig, Base.htmlReport, Base.driver, )
 
+        if len(self.totalTestInstanceToExecuteClean) !=0:
+            for i in range(len(self.totalTestInstanceToExecuteClean)):
+                self.totalTestInstanceToExecuteClean
+                executor = ExecutorService(self.frameworkConfig, Base.htmlReport, Base.driver, self.totalTestInstanceToExecuteClean[i])
+                executor.getKeywords()
+                executor.executekeywords()
 
     def quitDriver(self):
         if 'Web App' == self.frameworkConfig.get('testing.type'):
