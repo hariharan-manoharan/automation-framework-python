@@ -1,10 +1,10 @@
 import os
 from driverFactory import BrowserDriverFactory
 from driverFactory import AndroidDriverFactory
-from webAppTests import SeleniumTestSuite
-from mobileAppTests import AppiumTestSuite
 from reportFactory.HtmlReportGenerator import HtmlReport
 from utils.FrameworkConfig import FrameworkConfigParser
+from utils.ExcelUtils import ExcelRunManagerAccess
+from TestParameters import TestParameters
 import Executor
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
@@ -31,8 +31,8 @@ class Base:
             self.createAndroidDriverObject()
         self.initializeReport()
         self. collectTestInstances()
-        self.executeTest()
-        self.quitDriver()
+        #self.executeTest()
+        #self.quitDriver()
         self.generateReport()
 
     def getFrameworkConfig(self):
@@ -40,7 +40,16 @@ class Base:
         self.frameworkConfig = frameworkConfigurations.readConfig()
 
     def collectTestInstances(self):
-        pass
+        runManagerAccess = ExcelRunManagerAccess()
+        testinstances = runManagerAccess.getRunManagerInfo('RunManager')
+        totalTestcasesToExecute = len(testinstances)
+        self.totalTestInstanceToExecutClean = []
+        if totalTestcasesToExecute == 0:
+            print 'No testcase is marked with Execute = Yes'
+        else:
+            for i in range(totalTestcasesToExecute):
+                testParameters = TestParameters(testinstances[i]['TC_ID'],testinstances[i]['TEST_DESCRIPTION'],testinstances[i]['EXECUTE'])
+                self.totalTestInstanceToExecutClean.insert(i,testParameters)
 
 
     def initializeReport(self):

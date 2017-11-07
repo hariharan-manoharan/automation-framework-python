@@ -4,8 +4,8 @@ import openpyxl
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
-run_manager_file_path = os.path.join(os.path.dirname(parentDir), 'RunManager.xlsx')
-testdata_file_path = os.path.join(os.path.dirname(parentDir), 'TestData.xlsx')
+run_manager_file_path = os.path.join(parentDir, 'RunManager.xlsx')
+testdata_file_path = os.path.join(parentDir, 'TestData.xlsx')
 
 
 class ExcelTestDataAccess:
@@ -118,22 +118,6 @@ class ExcelRunManagerAccess:
         return  columnNames
 
 
-if __name__ == '__main__':
-    ea = ExcelTestDataAccess()
-    ea.getRowData('Keywords', 'TESTCASE3')
-
-    em = ExcelRunManagerAccess()
-    testinstances = em.getRunManagerInfo('RunManager')
-    totalTestcasesToExecute = len(testinstances)
-    if totalTestcasesToExecute == 0:
-        print 'No testcase is marked with Execute = Yes'
-    else:
-        print testinstances
-        for i in range(totalTestcasesToExecute):
-            testcaseId = testinstances[i]['TC_ID']
-            testdescription = testinstances[i]['TEST_DESCRIPTION']
-            execute = testinstances[i]['EXECUTE']
-            print testcaseId +':'+testdescription+':'+execute
 
 
 

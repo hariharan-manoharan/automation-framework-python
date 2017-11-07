@@ -104,3 +104,4 @@ ENV/
 *.apk
 *.xlsx
 .idea/
+com/fulcrum/automation/reports/
