@@ -1,7 +1,6 @@
-import io
 import os
 import openpyxl
-from openpyxl.utils import coordinate_from_string, column_index_from_string
+
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
