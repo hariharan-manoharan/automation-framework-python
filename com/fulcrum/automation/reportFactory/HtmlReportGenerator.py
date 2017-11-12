@@ -46,7 +46,7 @@ class HtmlReport:
 
     def takeScreenshot(self):
         screenshotName = self.generateScreenshotName()
-        self.driver.save_screenshot('reports/'+'Run-'+self.reportDir+'/'+screenshotName+'.png')
+        self.driver.save_screenshot('reports/'+'Run-'+self.reportDir+'/images/'+screenshotName+'.png')
         return screenshotName
 
 
