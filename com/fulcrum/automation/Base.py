@@ -6,6 +6,7 @@ from utils.FrameworkConfig import FrameworkConfigParser
 from utils.ExcelUtils import ExcelRunManagerAccess
 from TestParameters import TestParameters
 from Executor import ExecutorService
+import errno
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -24,6 +25,7 @@ class Base:
         print 'Base class constructor executed...'
 
     def execute(self):
+        self.make_sure_path_exists('reports')
         self.getFrameworkConfig()
         if 'Web App' == self.frameworkConfig.get('testing.type'):
             self.createBrowserDriverObject()
@@ -87,6 +89,14 @@ class Base:
 
     def generateReport(self):
         Base.htmlReport.generateReport()
+
+
+    def make_sure_path_exists(self, path):
+        try:
+            os.makedirs(path)
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
 
 if __name__ == '__main__':
     Base().execute()

@@ -11,40 +11,46 @@ class WebReusableFunctions:
 
 
     def __init__(self, driver, report):
-
         self.driver = driver
         self.report = report
 
-    def splitArguments(self, arguments):
-        splittedArgs = arguments.split('##')
-        return splittedArgs
+    def split_arguments(self, arguments):
+        split_args = dict(argument.split('=') for argument in arguments.split(','))
+        return split_args
 
-    def enterTextId(self, arguments):
-        args = self.splitArguments(arguments)
+    def enter_text_id(self, args):
+        args = self.split_arguments(args)
+
         if len(args) == 2:
-            self.driver.find_element_by_id(args[0]).send_keys(args[1])
-            self.report.addTestStep('enterTextId', 'Enter Text by ID - ' + args[1], 'PASS')
+            self.driver.find_element_by_id(args['id']).send_keys(args['text'])
+            self.report.addTestStep('enterTextId', 'Enter Text by ID - ' + args['id'], 'PASS')
 
-    def enterTextName(self, name, value):
+    def enter_text_name(self, args):
+        args = self.split_arguments(args)
 
-        self.driver.find_element_by_name(name).send_keys(value)
-        self.report.addTestStep('enterTextName', 'Enter Text by NAME' + value, 'PASS')
+        self.driver.find_element_by_name(args['name']).send_keys(args['text'])
+        self.report.addTestStep('enterTextName', 'Enter Text by NAME' + args['text'], 'PASS')
 
-    def clickElementId(self, argument):
+    def click_element_id(self, args):
+        args = self.split_arguments(args)
+
         wait = WebDriverWait(self.driver, 10)
-        element = wait.until(EC.element_to_be_clickable((By.ID, argument)))
+        element = wait.until(EC.element_to_be_clickable((By.ID, args['id'])))
         element.click()
         self.report.addTestStep('clickElementId', 'Click Element by ID', 'PASS')
 
-    def clickElementName(self, name):
+    def click_element_name(self, args):
+        args = self.split_arguments(args)
+
         wait = WebDriverWait(self.driver, 10)
-        element = wait.until(EC.element_to_be_clickable((By.NAME, name)))
+        element = wait.until(EC.element_to_be_clickable((By.NAME, args['name'])))
         element.click()
         self.report.addTestStep('clickElementName', 'Click Element by Name', 'PASS')
 
-    def getUrl(self, arguments):
-        args = self.splitArguments(arguments)
-        self.driver.get(args[0])
-        assert args[1] in self.driver.title
-        self.report.addTestStep('getUrl','Web app with URL ' + args[0] + ' is launched successfully', 'PASS')
+    def get_url(self, args):
+        args = self.split_arguments(args)
+
+        self.driver.get(args['url'])
+        assert args['title'] in self.driver.title
+        self.report.addTestStep('getUrl','Web app with URL ' + args['title'] + ' is launched successfully', 'PASS')
 

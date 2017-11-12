@@ -35,10 +35,10 @@ class ExecutorService:
 
     def executekeywords(self):
         self.report.startTest(self.testParameters.getTestDescription())
-        for i in range(len(self.keywords)-1):
+        for i in range(1, len(self.keywords)):
 
-            currentKeyword = self.keywords['KEYWORD_'+str(i+1)]
-            currentArguments = self.arguments['KEYWORD_'+str(i+1)]
+            currentKeyword = self.keywords['KEYWORD_'+str(i)]
+            currentArguments = self.arguments['KEYWORD_'+str(i)]
 
             if 'Web App' == self.frameworkConfig.get('testing.type'):
                 obj = WebReusableFunctions(self.driver, self.report)
