@@ -52,5 +52,5 @@ class WebReusableFunctions:
 
         self.driver.get(args['url'])
         assert args['title'] in self.driver.title
-        self.report.addTestStep('getUrl','Web app with URL ' + args['title'] + ' is launched successfully', 'PASS')
+        self.report.addTestStep('getUrl','Web app with URL ' + args['title'] + ' is launched successfully', 'FAIL')
 

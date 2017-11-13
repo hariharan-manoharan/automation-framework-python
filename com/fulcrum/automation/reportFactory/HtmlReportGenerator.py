@@ -3,6 +3,9 @@ from reports import Report
 from TestStep import TestcaseStep
 from TestCase import Testcase
 from datetime import datetime
+import errno
+import shutil
+from jinja2 import Environment, FileSystemLoader
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -10,7 +13,8 @@ parentDir = os.path.dirname(fileDir)
 class HtmlReport:
 
     reportDir = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
-    report = ''
+    dashboard_report = ''
+    testcase_report = ''
     driver = ''
     testcaseCounter = 0
     testcases = []
@@ -22,23 +26,59 @@ class HtmlReport:
 
     def __init__(self, driver):
         self.driver = driver
-        self.report = Report(directory='reports/'+ 'Run-'+self.reportDir,searchpath='reportFactory/templates/',template_filename='Report Summary.html')
-        self.report.jinja['title'] = 'Automation Test Summary'
+        self.copyReportTemplates()
+        self.make_sure_path_exists('reports/'+ 'Run-'+self.reportDir)
+        self.make_sure_path_exists('reports/' + 'Run-' + self.reportDir+'/images')
 
-    def startTest(self, testcaseDescription):
+
+    def startTest(self, testcaseId, testcaseDescription):
         self.testcaseCounter += 1
-        self.currentTestcase = Testcase(self.testcaseCounter, testcaseDescription)
+        self.currentTestcase = Testcase(self.testcaseCounter, testcaseId, testcaseDescription)
         self.testcases.append(self.currentTestcase)
+
+    def endTest(self):
+        if self.currentTestcase.getTestStepFailCount() > 0:
+            self.testcaseFailCounter += 1
+        else:
+            self.testcasePassCounter += 1
 
     def addTestStep(self, testStep, testDescription, status):
         screenshotName = self.takeScreenshot()
-        self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName+'.png')
+        self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName+'.png', str(datetime.now().strftime('%H:%M:%S')))
 
-    def generateReport(self):
+    def generateReport(self, totalExecutionTime):
 
-        self.report.jinja['testcases'] = self.testcases
-        self.report.jinja['testRunFolderName'] = self.reportDir
-        self.report.create_report(onweb=True)
+        j2_env = Environment(loader=FileSystemLoader(fileDir),
+                             trim_blocks=True)
+
+        output_from_parsed_template_dashboard = j2_env.get_template('reports/'+'Run-'+self.reportDir+'/templates/dashboard.html').render(
+        totaltests = self.testcaseCounter,
+        testsPassed = self.testcasePassCounter,
+        testsFailed = self.testcaseFailCounter,
+        totalExecutionTime = totalExecutionTime,
+        testcases= self.testcases,
+        testRunFolderName = self.reportDir
+        )
+
+        with open('reports/'+'Run-'+self.reportDir+'/dashboard.html', "w+") as file:
+            file.write(output_from_parsed_template_dashboard)
+
+
+        for testcase in self.testcases:
+            output_from_parsed_template_testcase = j2_env.get_template('reports/'+'Run-'+self.reportDir+'/templates/testcase.html').render(
+            testcases=self.testcases,
+            testcase= testcase,
+            testSteps = testcase.testSteps,
+            testRunFolderName = self.reportDir
+            )
+
+            with open('reports/' + 'Run-' + self.reportDir + '/'+testcase.testcaseId+'.html', "w+") as file:
+                file.write(output_from_parsed_template_testcase)
+
+
+
+
+
 
     def generateScreenshotName(self):
         screenshotName = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S%f'))
@@ -48,6 +88,28 @@ class HtmlReport:
         screenshotName = self.generateScreenshotName()
         self.driver.save_screenshot('reports/'+'Run-'+self.reportDir+'/images/'+screenshotName+'.png')
         return screenshotName
+
+    def make_sure_path_exists(self, path):
+        try:
+            os.makedirs(path)
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
+
+    def copyReportTemplates(self):
+
+        source = 'reportFactory/templates'
+        destination = 'reports/'+'Run-'+self.reportDir
+
+        try:
+            shutil.copytree(source, destination)
+        except OSError as exc:  # python >2.5
+            if exc.errno == errno.ENOTDIR:
+                shutil.copy(source, destination)
+            else:
+                raise
+
+
 
 
 

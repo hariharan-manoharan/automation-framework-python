@@ -6,6 +6,7 @@ from webAppTests.reusableLibrary.CustomFuntions import WebCustomFunctions
 from utils.ExcelUtils import ExcelTestDataAccess
 from TestParameters import TestParameters
 
+
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
 
@@ -34,7 +35,7 @@ class ExecutorService:
 
 
     def executekeywords(self):
-        self.report.startTest(self.testParameters.getTestDescription())
+        self.report.startTest(self.testParameters.getTestcaseId(),self.testParameters.getTestDescription())
         for i in range(1, len(self.keywords)):
 
             currentKeyword = self.keywords['KEYWORD_'+str(i)]
@@ -57,3 +58,4 @@ class ExecutorService:
                         self.isMethodFound = False
                     else:
                         self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'PASS')
+        self.report.endTest()

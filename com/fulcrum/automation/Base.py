@@ -7,6 +7,7 @@ from utils.ExcelUtils import ExcelRunManagerAccess
 from TestParameters import TestParameters
 from Executor import ExecutorService
 import errno
+import datetime
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -25,17 +26,25 @@ class Base:
         print 'Base class constructor executed...'
 
     def execute(self):
-        self.make_sure_path_exists('reports')
-        self.getFrameworkConfig()
-        if 'Web App' == self.frameworkConfig.get('testing.type'):
-            self.createBrowserDriverObject()
-        elif 'Mobile App' == self.frameworkConfig.get('testing.type'):
-            self.createAndroidDriverObject()
-        self.initializeReport()
-        self. collectTestInstances()
-        self.executeTest()
-        self.quitDriver()
-        self.generateReport()
+        try:
+            self.setExecutionStartTime()
+            self.make_sure_path_exists('reports')
+            self.getFrameworkConfig()
+            if 'Web App' == self.frameworkConfig.get('testing.type'):
+                self.createBrowserDriverObject()
+            elif 'Mobile App' == self.frameworkConfig.get('testing.type'):
+                self.createAndroidDriverObject()
+            self.initializeReport()
+            self. collectTestInstances()
+            self.executeTest()
+        except :
+            print 'Execption occured in exeute method'
+        finally:
+            self.quitDriver()
+            self.setExecutionEndTime()
+            self.generateReport()
+
+
 
     def getFrameworkConfig(self):
         frameworkConfigurations = FrameworkConfigParser()
@@ -88,7 +97,7 @@ class Base:
 
 
     def generateReport(self):
-        Base.htmlReport.generateReport()
+        Base.htmlReport.generateReport(str(self.startExecutionEndTime - self.startExecutionStartTime))
 
 
     def make_sure_path_exists(self, path):
@@ -97,6 +106,14 @@ class Base:
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
+
+
+    def setExecutionStartTime(self):
+        self.startExecutionStartTime = datetime.datetime.now()
+
+
+    def setExecutionEndTime(self):
+        self.startExecutionEndTime = datetime.datetime.now()
 
 if __name__ == '__main__':
     Base().execute()
