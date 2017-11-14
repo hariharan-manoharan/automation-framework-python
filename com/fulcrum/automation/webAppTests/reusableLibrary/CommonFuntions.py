@@ -45,11 +45,10 @@ class WebReusableFunctions:
         wait = WebDriverWait(self.driver, 10)
         element = wait.until(EC.element_to_be_clickable((By.NAME, args['name'])))
         element.click()
-        self.report.addTestStep('clickElementName', 'Click Element by Name', 'PASS')
+        self.report.addTestStep('clickElementName', 'Click Element by Name', 'FAIL')
 
     def get_url(self, args):
         args = self.split_arguments(args)
-
         self.driver.get(args['url'])
         assert args['title'] in self.driver.title
         self.report.addTestStep('getUrl','Web app with URL ' + args['title'] + ' is launched successfully', 'PASS')

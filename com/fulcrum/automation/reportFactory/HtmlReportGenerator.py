@@ -22,6 +22,8 @@ class HtmlReport:
     testcasePassCounter = 0
     testcaseFailCounter = 0
 
+    failedTestCases = []
+
     currentTestcase = ''
 
     def __init__(self, driver):
@@ -34,19 +36,32 @@ class HtmlReport:
     def startTest(self, testcaseId, testcaseDescription):
         self.testcaseCounter += 1
         self.currentTestcase = Testcase(self.testcaseCounter, testcaseId, testcaseDescription)
+        self.currentTestcase.setTestStartTime()
         self.testcases.append(self.currentTestcase)
 
     def endTest(self):
+        self.currentTestcase.setTestEndTime()
+        self.currentTestcase.setTotalTestExecutionTime()
         if self.currentTestcase.getTestStepFailCount() > 0:
             self.testcaseFailCounter += 1
             self.currentTestcase.setTescaseResult('FAIL')
+            self.failedTestCases.append(self.currentTestcase)
         else:
             self.currentTestcase.setTescaseResult('PASS')
             self.testcasePassCounter += 1
 
     def addTestStep(self, testStep, testDescription, status):
-        screenshotName = self.takeScreenshot()
-        self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName+'.png', str(datetime.now().strftime('%H:%M:%S')))
+
+        if status == 'PASS' or status == 'FAIL':
+            screenshotName = self.takeScreenshot()
+            self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName+'.png', str(datetime.now().strftime('%H:%M:%S')))
+        elif status == 'INFO':
+            self.currentTestcase.addTestStepInfo(testStep, testDescription, status, str(datetime.now().strftime('%H:%M:%S')))
+
+
+        if status == 'FAIL':
+            self.currentTestcase.collectFailedTestSteps(testStep, testDescription)
+
 
     def generateReport(self, totalExecutionTime):
 
@@ -59,7 +74,8 @@ class HtmlReport:
         testsFailed = self.testcaseFailCounter,
         totalExecutionTime = totalExecutionTime,
         testcases= self.testcases,
-        testRunFolderName = self.reportDir
+        testRunFolderName = self.reportDir,
+        failedTestCases = self.failedTestCases
         )
 
         with open('reports/'+'Run-'+self.reportDir+'/dashboard.html', "w+") as file:
@@ -76,10 +92,6 @@ class HtmlReport:
 
             with open('reports/' + 'Run-' + self.reportDir + '/'+testcase.testcaseId+'.html', "w+") as file:
                 file.write(output_from_parsed_template_testcase)
-
-
-
-
 
 
     def generateScreenshotName(self):

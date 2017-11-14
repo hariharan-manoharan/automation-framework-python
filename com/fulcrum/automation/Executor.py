@@ -41,6 +41,8 @@ class ExecutorService:
             currentKeyword = self.keywords['KEYWORD_'+str(i)]
             currentArguments = self.arguments['KEYWORD_'+str(i)]
 
+            self.report.addTestStep('Keyword', '<b>'+str(currentKeyword).upper()+'</b>', 'INFO')
+
             if 'Web App' == self.frameworkConfig.get('testing.type'):
                 obj = WebReusableFunctions(self.driver, self.report)
                 names = dir(WebReusableFunctions)
@@ -54,8 +56,8 @@ class ExecutorService:
                     self.isMethodFound = True
                     attr(currentArguments)
                     if self.isMethodFound == True:
-                        self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'PASS')
+                        self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'INFO')
                         self.isMethodFound = False
                     else:
-                        self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'PASS')
+                        self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'INFO')
         self.report.endTest()

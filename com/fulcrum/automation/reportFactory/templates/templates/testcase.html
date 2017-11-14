@@ -36,7 +36,7 @@
             <ul class="nav">
                 <li>
                     <a href="dashboard.html">
-                        <i class="material-icons">dashboard</i>
+                        <i class="material-icons" style="color:orange;">dashboard</i>
                         <p>Dashboard</p>
                     </a>
                 </li>
@@ -44,7 +44,7 @@
                 <li>
                     <a href="./{{ testcase.testcaseId }}.html">
                         {% if testcase.testcaseResult=='PASS' %}
-                        <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:green;">done</i></p>
+                        <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:green;">check_circle</i></p>
                         {% elif testcase.testcaseResult=='FAIL' %}
                         <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:red;">error</i></p>
                         {% endif %}
@@ -64,7 +64,9 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"> Test case details </a>
+                    <h5><span class="label label-success">Start Time : {{ testcase.startTestStartTime }}</span>
+                    <span class="label label-danger">End Time : {{ testcase.startTestEndTime }}</span>
+                    <span class="label label-info">Total Time : {{ testcase.totalTestExecutionTime }}</span></h5>
                 </div>
             </div>
         </nav>
@@ -89,17 +91,21 @@
                                     {% for testStep in testSteps %}
                                     <tr>
                                         {% if testStep.testStepResult=='PASS' %}
-                                        <!--td>{{ testStep.testStepResult }}</td-->
-                                        <td><i class="material-icons" style="color:green;">done</i></td>
+                                        <td><i class="material-icons" style="color:green;">check_circle</i></td>
                                         {% elif testStep.testStepResult=='FAIL' %}
-                                        <!--td>{{ testStep.testStepResult }}</td-->
                                         <td><i class="material-icons" style="color:red;">error</i></td>
+                                        {% elif testStep.testStepResult=='INFO' %}
+                                        <td><i class="material-icons" style="color:blue;">info</i></td>
                                         {% endif %}
                                         <td>{{ testStep.testtTimestamp }}</td>
                                         <td>{{ testStep.testStepDescription }}</td>
+                                        {% if testStep.testStepScreenshotName != '' %}
                                         <td class="imageContainer">
                                             <a href="images/{{ testStep.testStepScreenshotName }}" target="_top">Screenshot</a>
                                         </td>
+                                        {% else %}
+                                        <td></td>
+                                        {% endif %}
                                     </tr>
                                     {% endfor %}
                                     </tbody>
