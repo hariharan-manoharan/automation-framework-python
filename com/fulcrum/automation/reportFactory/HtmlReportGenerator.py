@@ -39,7 +39,9 @@ class HtmlReport:
     def endTest(self):
         if self.currentTestcase.getTestStepFailCount() > 0:
             self.testcaseFailCounter += 1
+            self.currentTestcase.setTescaseResult('FAIL')
         else:
+            self.currentTestcase.setTescaseResult('PASS')
             self.testcasePassCounter += 1
 
     def addTestStep(self, testStep, testDescription, status):

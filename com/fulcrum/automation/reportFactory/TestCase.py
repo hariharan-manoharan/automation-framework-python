@@ -9,7 +9,7 @@ class Testcase:
     testcaseCount = ''
     testcaseDescription = ''
     testcaseId = ''
-    tescaseResult = ''
+    testcaseResult = ''
     testSteps = []
 
     testStepCounter = 0
@@ -29,6 +29,11 @@ class Testcase:
 
     def getTestStepFailCount(self):
         return self.testStepFailCounter
+
+    def setTescaseResult(self, testcaseResult):
+
+        self.testcaseResult = testcaseResult
+
 
 
     def addTestStep(self, testStep, testDescription, status, screenshotName, timestamp):

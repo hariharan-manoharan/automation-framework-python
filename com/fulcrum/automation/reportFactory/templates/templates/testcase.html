@@ -43,8 +43,11 @@
                 {% for testcase in testcases %}
                 <li>
                     <a href="./{{ testcase.testcaseId }}.html">
-                        <i class="material-icons">expand_more</i>
-                        <p>{{ testcase.testcaseId }}</p>
+                        {% if testcase.testcaseResult=='PASS' %}
+                        <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:green;">done</i></p>
+                        {% elif testcase.testcaseResult=='FAIL' %}
+                        <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:red;">error</i></p>
+                        {% endif %}
                     </a>
                 </li>
                 {% endfor %}
@@ -85,7 +88,13 @@
                                     <tbody>
                                     {% for testStep in testSteps %}
                                     <tr>
-                                        <td>{{ testStep.testStepResult }}</td>
+                                        {% if testStep.testStepResult=='PASS' %}
+                                        <!--td>{{ testStep.testStepResult }}</td-->
+                                        <td><i class="material-icons" style="color:green;">done</i></td>
+                                        {% elif testStep.testStepResult=='FAIL' %}
+                                        <!--td>{{ testStep.testStepResult }}</td-->
+                                        <td><i class="material-icons" style="color:red;">error</i></td>
+                                        {% endif %}
                                         <td>{{ testStep.testtTimestamp }}</td>
                                         <td>{{ testStep.testStepDescription }}</td>
                                         <td class="imageContainer">
