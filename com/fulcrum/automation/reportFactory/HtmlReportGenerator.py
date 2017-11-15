@@ -93,6 +93,36 @@ class HtmlReport:
             with open('reports/' + 'Run-' + self.reportDir + '/'+testcase.testcaseId+'.html', "w+") as file:
                 file.write(output_from_parsed_template_testcase)
 
+    def generateReportImmediateFlush(self):
+
+        j2_env = Environment(loader=FileSystemLoader(fileDir),
+                             trim_blocks=True)
+
+        output_from_parsed_template_dashboard = j2_env.get_template('reports/'+'Run-'+self.reportDir+'/templates/dashboard.html').render(
+        totaltests = self.testcaseCounter,
+        testsPassed = self.testcasePassCounter,
+        testsFailed = self.testcaseFailCounter,
+        totalExecutionTime = 'Execution in progress',
+        testcases= self.testcases,
+        testRunFolderName = self.reportDir,
+        failedTestCases = self.failedTestCases
+        )
+
+        with open('reports/'+'Run-'+self.reportDir+'/dashboard.html', "w+") as file:
+            file.write(output_from_parsed_template_dashboard)
+
+
+        for testcase in self.testcases:
+            output_from_parsed_template_testcase = j2_env.get_template('reports/'+'Run-'+self.reportDir+'/templates/testcase.html').render(
+            testcases=self.testcases,
+            testcase= testcase,
+            testSteps = testcase.testSteps,
+            testRunFolderName = self.reportDir
+            )
+
+            with open('reports/' + 'Run-' + self.reportDir + '/'+testcase.testcaseId+'.html', "w+") as file:
+                file.write(output_from_parsed_template_testcase)
+
 
     def generateScreenshotName(self):
         screenshotName = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S%f'))

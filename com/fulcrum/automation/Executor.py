@@ -61,3 +61,4 @@ class ExecutorService:
                     else:
                         self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'INFO')
         self.report.endTest()
+        self.report.generateReportImmediateFlush()
