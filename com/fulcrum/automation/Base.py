@@ -97,7 +97,15 @@ class Base:
 
 
     def generateReport(self):
-        Base.htmlReport.generateReport(str(self.startExecutionEndTime - self.startExecutionStartTime))
+        totalTimeDelta = self.startExecutionEndTime - self.startExecutionStartTime
+        Base.htmlReport.generateReport(str(totalTimeDelta))
+
+        #hours = totalTimeDelta.seconds / 3600
+        #minutes = totalTimeDelta.seconds / 60
+        #seconds = totalTimeDelta.seconds
+
+        #Base.htmlReport.generateReport(str(str(hours) + 'h ' + str(minutes) + 'm ' + str(seconds) + ' secs'))
+
 
 
     def make_sure_path_exists(self, path):
