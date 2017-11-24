@@ -165,7 +165,7 @@ span.teststephover::after {
                                  </thead>
                                  <tbody>
                                     {% for testStep in testSteps %}
-                                    <tr>
+                                    <tr id="{{ testStep.testStepCount }}">
                                        {% if testStep.testStepResult=='PASS' %}
                                        <td><i class="material-icons" style="color:green;" data-toggle="tooltip" title="pass">check_circle</i></td>
                                        {% elif testStep.testStepResult=='FAIL' %}

@@ -19,12 +19,13 @@ class CommonObjects:
 
         self.xpath_btn_popup_yes = '//a[contains(text(),\'Yes\')]'
         self.xpath_btn_popup_no = '//a[contains(text(),\'No\')]'
+        self.xpath_btn_popup_close = '//form[@class = \'dataform-form form\']//a[contains(text(),\'Close\')]'
 
         self.xpath_link_search_tab = '//li[@class=\'tab\']/a[contains(text(),\'Search\')]'
         self.xpath_link_results_tab = '//li[@class=\'tab\']/a[contains(text(),\'Results\')]'
         self.xpath_link_edit_tab = '//li[@class=\'tab\']/a[contains(text(),\'Edit\')]'
 
-        self.xpath_exception_window_title = '//div[text()=\'{}\']'
+        self.xpath_div_contains_txt = '//div[contains(text(),\'{}\')]'
 
 
 

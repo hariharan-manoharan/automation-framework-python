@@ -54,10 +54,12 @@ class WebReusableFunctions(CommonObjects):
         :param str object_name        
     '''
     def click_element_xpath(self, xpath_locator, object_name):
-        if self.is_element_clickable('XPATH',xpath_locator):
+        if self.is_element_clickable('XPATH', xpath_locator):
             self.element = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath_locator)))
-            self.element.click()
-            self.report.addTestStep('click_element_id', object_name + ' is clicked', 'PASS')
+            if self.wait_until_element_is_present('XPATH',
+                                                  '//div[@class=\'blocking-screen\']'):
+                self.element.click()
+                self.report.addTestStep('click_element_id', object_name + ' is clicked', 'PASS')
         else:
             self.report.addTestStep('click_element_id', object_name + ' is not clicked', 'FAIL')
 
@@ -144,7 +146,7 @@ class WebReusableFunctions(CommonObjects):
                 self.report.addTestStep('click_button', 'Clicked button with text contains - Search', 'PASS')
             else:
                 self.report.addTestStep('click_button',
-                                        'Click button with text contains - Search. Edit screen is not displayed', 'FAIL')
+                                        'Click button with text contains - Search. Results screen is not displayed', 'FAIL')
         else:
             self.report.addTestStep('click_button',
                                     'Not Clicked button with text contains - Search.', 'FAIL')
@@ -161,7 +163,22 @@ class WebReusableFunctions(CommonObjects):
                                     text + ' is entered in field ' + field_name, 'PASS')
         else:
             self.report.addTestStep('enter_text_by_xpath',
-                                    text + ' is not entered in field ' + field_name, 'PASS')
+                                    text + ' is not entered in field ' + field_name, 'FAIL')
+
+    def get_text_xpath(self, xpath, field_name):
+
+        is_present = self.is_element_present('XPATH', xpath.format(field_name))
+
+        if is_present:
+            text = self.driver.find_element_by_xpath(xpath.format(field_name)).text
+
+            self.report.addTestStep('get_text_xpath',
+                                    text + ' is returned from field ' + field_name, 'PASS')
+            return text
+        else:
+            self.report.addTestStep('get_text_xpath',
+                                    'None is returned. Field '+field_name+' is not present', 'FAIL')
+            return None
 
     def is_element_present(self, by, locator):
         try:
@@ -191,6 +208,24 @@ class WebReusableFunctions(CommonObjects):
                 return True
             elif by == 'NAME':
                 self.wait.until(EC.element_to_be_clickable((By.NAME, locator)))
+                return True
+
+            return False
+        except NoSuchElementException:
+            return False
+        except WebDriverException:
+            return False
+
+    def wait_until_element_is_present(self, by, locator):
+        try:
+            if by == 'XPATH':
+                self.wait.until_not(EC.presence_of_element_located((By.XPATH, locator)))
+                return True
+            elif by == 'ID':
+                self.wait.until_not(EC.presence_of_element_located((By.ID, locator)))
+                return True
+            elif by == 'NAME':
+                self.wait.until_not(EC.presence_of_element_located((By.NAME, locator)))
                 return True
 
             return False

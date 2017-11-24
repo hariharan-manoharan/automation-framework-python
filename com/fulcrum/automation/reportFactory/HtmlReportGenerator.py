@@ -61,8 +61,6 @@ class HtmlReport:
             self.currentTestcase.addTestStepInfo(testStep, testDescription, status,
                                                  str(datetime.now().strftime('%H:%M:%S')))
 
-        if status == 'FAIL':
-            self.currentTestcase.collectFailedTestSteps(testStep, testDescription)
 
     def generateReport(self, totalExecutionTime):
 

@@ -51,24 +51,25 @@ class Testcase:
     def setTotalTestExecutionTime(self):
         self.totalTestExecutionTime = str(self.startTestEndTime - self.startTestStartTime)
 
-    def collectFailedTestSteps(self, testStep, testDescription ):
-        self.failedTestSteps.append(testStep+' : '+testDescription)
+    def collectFailedTestSteps(self, testStepLocal):
+        self.failedTestSteps.append(testStepLocal)
 
     def addTestStep(self, testStep, testDescription, status, screenshotName, timestamp):
         self.testStepCounter += 1
         if status == 'PASS':
             self.testStepPassCounter += 1
-            self.testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
-            self.testSteps.append(self.testStepLocal)
+            testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
+            self.testSteps.append(testStepLocal)
         elif status == 'FAIL':
             self.testStepFailCounter += 1
-            self.testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
-            self.testSteps.append(self.testStepLocal)
+            testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
+            self.testSteps.append(testStepLocal)
+            self.collectFailedTestSteps(testStepLocal)
 
     def addTestStepInfo(self, testStep, testDescription, status,  timestamp, screenshotName=''):
         self.testStepCounter += 1
         if status == 'INFO':
             self.testStepInfoCounter += 1
-            self.testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
-            self.testSteps.append(self.testStepLocal)
+            testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
+            self.testSteps.append(testStepLocal)
 

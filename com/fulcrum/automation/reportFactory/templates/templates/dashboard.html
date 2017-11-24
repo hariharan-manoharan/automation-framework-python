@@ -151,7 +151,7 @@
                                         <td>{{ failedTestCase.testcaseDescription }}</td>
                                         <td>
                                             {% for failedTestStep in failedTestCase.failedTestSteps %}
-                                            <img src="./assets/img/red_anime.gif" style="width: 25px; height: 25px; "><a href="./{{ failedTestCase.testcaseId }}.html"><span class="label label-danger">{{ failedTestStep }}</span></a></br>
+                                            <img src="./assets/img/red_anime.gif" style="width: 25px; height: 25px; "><a href="./{{ failedTestCase.testcaseId }}.html#{{failedTestStep.testStepCount}}"><span class="label label-danger">{{ failedTestStep.testStep }} : {{ failedTestStep.testStepDescription }}</span></a></br>
                                             {% endfor %}
                                         </td>
                                     </tr>
