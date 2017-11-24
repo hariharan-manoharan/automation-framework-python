@@ -170,7 +170,7 @@ class WebReusableFunctions(CommonObjects):
         is_present = self.is_element_present('XPATH', xpath.format(field_name))
 
         if is_present:
-            text = self.driver.find_element_by_xpath(xpath.format(field_name)).text
+            text = self.driver.find_element_by_xpath(xpath.format(field_name)).get_attribute('value')
 
             self.report.addTestStep('get_text_xpath',
                                     text + ' is returned from field ' + field_name, 'PASS')
