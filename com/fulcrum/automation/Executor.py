@@ -1,10 +1,6 @@
 import os
-from mobileAppTests.reusableLibrary.CommonFuntions import MobileReusableFunctions
-from mobileAppTests.reusableLibrary.CustomFuntions import MobileCustomFunctions
-from webAppTests.reusableLibrary.CommonFuntions import WebReusableFunctions
-from webAppTests.reusableLibrary.CustomFuntions import WebCustomFunctions
+from webAppTests.BusinessComponents import BusinessComp
 from utils.ExcelUtils import ExcelTestDataAccess
-from TestParameters import TestParameters
 
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
@@ -13,52 +9,46 @@ parentDir = os.path.dirname(fileDir)
 
 class ExecutorService:
 
-    def __init__(self,frameworkConfig, report, driver, testParameters):
-        self.isMethodFound = False
-        self.frameworkConfig = frameworkConfig
+    keywords = {}
+    arguments = {}
+
+    def __init__(self, framework_config, report, driver, test_parameters):
+        self.is_method_found = False
+        self.framework_config = framework_config
         self.report = report
         self.driver = driver
-        self.testParameters = testParameters
+        self.test_parameters = test_parameters
         print 'ExecutorService Constructor executed'
 
+    def get_keywords(self):
 
-    def getKeywords(self):
+        test_data_access = ExcelTestDataAccess()
+        self.keywords = test_data_access.get_row_data('Keywords', self.test_parameters.get_test_case_id())
 
-        testDataAccess = ExcelTestDataAccess()
-        self.keywords = testDataAccess.getRowData('Keywords',self.testParameters.getTestcaseId())
-        self.getArguments()
-
-    def getArguments(self):
-
-        testDataAccess = ExcelTestDataAccess()
-        self.arguments = testDataAccess.getRowData('Keywords', self.testParameters.getTestcaseId()+'_ARGS')
-
-
-    def executekeywords(self):
-        self.report.startTest(self.testParameters.getTestcaseId(),self.testParameters.getTestDescription())
+    def execute_keywords(self):
+        self.report.startTest(self.test_parameters.get_test_case_id(), self.test_parameters.get_test_description())
         for i in range(1, len(self.keywords)):
 
-            currentKeyword = self.keywords['KEYWORD_'+str(i)]
-            currentArguments = self.arguments['KEYWORD_'+str(i)]
+            current_keyword = self.keywords['KEYWORD_'+str(i)]
 
-            self.report.addTestStep('Keyword', '<b>'+str(currentKeyword).upper()+'</b>', 'INFO')
+            self.report.addTestStep('Keyword', '<b>'+str(current_keyword).upper()+'</b>', 'INFO')
 
-            if 'Web App' == self.frameworkConfig.get('testing.type'):
-                obj = WebReusableFunctions(self.driver, self.report)
-                names = dir(WebReusableFunctions)
-            elif 'Mobile App' == self.frameworkConfig.get('testing.type'):
-                obj = MobileReusableFunctions()
-                names = dir(MobileReusableFunctions)
+            if 'Web App' == self.framework_config.get('testing.type'):
+                obj = BusinessComp(self.driver, self.report)
+                names = dir(BusinessComp)
+            elif 'Mobile App' == self.framework_config.get('testing.type'):
+                obj = BusinessComp()
+                names = dir(BusinessComp)
 
             for name in names:
                 attr = getattr(obj, name)
-                if callable(attr) and name == currentKeyword and self.isMethodFound == False:
-                    self.isMethodFound = True
-                    attr(currentArguments)
-                    if self.isMethodFound == True:
-                        self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'INFO')
-                        self.isMethodFound = False
+                if callable(attr) and name == current_keyword and not self.is_method_found:
+                    self.is_method_found = True
+                    attr()
+                    if self.is_method_found:
+                        self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', 'INFO')
+                        self.is_method_found = False
                     else:
-                        self.report.addTestStep('Keyword', currentKeyword + ' is executed sucessfully', 'INFO')
+                        self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', 'INFO')
         self.report.endTest()
         self.report.generateReportImmediateFlush()

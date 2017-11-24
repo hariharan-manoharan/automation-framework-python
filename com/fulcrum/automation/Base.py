@@ -12,116 +12,122 @@ import datetime
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
 
-class Base:
 
+class Base:
 
     driver = ''
     htmlReport = ''
-    browserDriverFactory = ''
-    androidDriverFactory = ''
-    frameworkConfig = {}
-
+    framework_config = {}
+    total_test_instance_to_execute_clean = []
+    browser_driver_factory = ''
+    android_driver_factory = ''
+    start_execution_start_time = ''
+    start_execution_end_time = ''
 
     def __init__(self):
+
         print 'Base class constructor executed...'
 
     def execute(self):
-        try:
-            self.setExecutionStartTime()
+
+        #try:
+            self.set_execution_start_time()
             self.make_sure_path_exists('reports')
-            self.getFrameworkConfig()
-            if 'Web App' == self.frameworkConfig.get('testing.type'):
-                self.createBrowserDriverObject()
-            elif 'Mobile App' == self.frameworkConfig.get('testing.type'):
-                self.createAndroidDriverObject()
-            self.initializeReport()
-            self. collectTestInstances()
-            self.executeTest()
-        except :
-            print 'Execption occured in exeute method'
-        finally:
-            self.quitDriver()
-            self.setExecutionEndTime()
-            self.generateReport()
+            self.get_framework_config()
+            if 'Web App' == self.framework_config.get('testing.type'):
+                self.create_browser_driver_object()
+            elif 'Mobile App' == self.framework_config.get('testing.type'):
+                self.create_android_driver_object()
+            self.initialize_report()
+            self. collect_test_instances()
+            self.execute_test()
+        #except:
+            print 'Exception occurred in execute method'
+        #finally:
+            self.quit_driver()
+            self.set_execution_end_time()
+            self.generate_report()
 
+    def get_framework_config(self):
 
+        framework_configurations = FrameworkConfigParser()
+        self.framework_config = framework_configurations.readConfig()
 
-    def getFrameworkConfig(self):
-        frameworkConfigurations = FrameworkConfigParser()
-        self.frameworkConfig = frameworkConfigurations.readConfig()
+    def collect_test_instances(self):
 
-    def collectTestInstances(self):
-        runManagerAccess = ExcelRunManagerAccess()
-        testinstances = runManagerAccess.getRunManagerInfo('RunManager')
-        totalTestcasesToExecute = len(testinstances)
-        self.totalTestInstanceToExecuteClean = []
-        if totalTestcasesToExecute == 0:
-            print 'No testcase is marked with Execute = Yes'
+        run_manager_access = ExcelRunManagerAccess()
+        test_instances = run_manager_access.get_run_manager_info('RunManager')
+        total_test_cases_to_execute = len(test_instances)
+
+        if total_test_cases_to_execute == 0:
+            print 'No test case is marked with Execute = Yes'
         else:
-            for i in range(totalTestcasesToExecute):
-                testParameters = TestParameters(testinstances[i]['TC_ID'],testinstances[i]['TEST_DESCRIPTION'],testinstances[i]['EXECUTE'])
-                self.totalTestInstanceToExecuteClean.insert(i,testParameters)
+            for i in range(total_test_cases_to_execute):
+                test_parameters = TestParameters(test_instances[i]['TC_ID'], test_instances[i]['TEST_DESCRIPTION']
+                                                 , test_instances[i]['EXECUTE'])
+                self.total_test_instance_to_execute_clean.insert(i, test_parameters)
 
+    def initialize_report(self):
 
-    def initializeReport(self):
-        Base.htmlReport = HtmlReport(Base.driver)
+        Base.htmlReport = HtmlReport(self.driver)
 
-    def createBrowserDriverObject(self):
+    def create_browser_driver_object(self):
 
-        self.browserDriverFactory = BrowserDriverFactory.DriverScript(self.frameworkConfig)
-        self.browserDriverFactory.setDriver(self.frameworkConfig.get('browser'))
-        Base.driver = self.browserDriverFactory.getDriver()
+        self.browser_driver_factory = BrowserDriverFactory.DriverScript(self.framework_config)
+        self.browser_driver_factory.setDriver(self.framework_config.get('browser'))
+        self.driver = self.browser_driver_factory.getDriver()
 
-    def createAndroidDriverObject(self):
+    def create_android_driver_object(self):
 
-        self.androidDriverFactory = AndroidDriverFactory.DriverScript(self.frameworkConfig.get('remote.port'), self.frameworkConfig)
-        #self.androidDriverFactory.startAppiumServerInstance()
-        self.androidDriverFactory.setDriver()
-        Base.driver = self.androidDriverFactory.getDriver()
+        self.android_driver_factory = AndroidDriverFactory.DriverScript(self.framework_config.get('remote.port'), self.framework_config)
+        # self.android_driver_factory.startAppiumServerInstance()
+        self.android_driver_factory.setDriver()
+        self.driver = self.android_driver_factory.getDriver()
 
-    def executeTest(self):
+    def execute_test(self):
 
-        if len(self.totalTestInstanceToExecuteClean) !=0:
-            for i in range(len(self.totalTestInstanceToExecuteClean)):
-                self.totalTestInstanceToExecuteClean
-                executor = ExecutorService(self.frameworkConfig, Base.htmlReport, Base.driver, self.totalTestInstanceToExecuteClean[i])
-                executor.getKeywords()
-                executor.executekeywords()
+        if len(self.total_test_instance_to_execute_clean) != 0:
+            for i in range(len(self.total_test_instance_to_execute_clean)):
+                executor = ExecutorService(self.framework_config, self.htmlReport, self.driver
+                                           , self.total_test_instance_to_execute_clean[i])
+                executor.get_keywords()
+                executor.execute_keywords()
 
-    def quitDriver(self):
-        if 'Web App' == self.frameworkConfig.get('testing.type'):
-            Base.driver.close()
-        elif 'Mobile App' == self.frameworkConfig.get('testing.type'):
-            #self.androidDriverFactory.killAppiumServerInstance()
-            Base.driver.quit()
+    def quit_driver(self):
 
+        if 'Web App' == self.framework_config.get('testing.type'):
+            self.driver.close()
+        elif 'Mobile App' == self.framework_config.get('testing.type'):
+            # self.androidDriverFactory.killAppiumServerInstance()
+            self.driver.quit()
 
-    def generateReport(self):
-        totalTimeDelta = self.startExecutionEndTime - self.startExecutionStartTime
-        Base.htmlReport.generateReport(str(totalTimeDelta))
+    def generate_report(self):
+        total_time_delta = self.start_execution_end_time - self.start_execution_start_time
+        self.htmlReport.generateReport(str(total_time_delta))
 
-        #hours = totalTimeDelta.seconds / 3600
-        #minutes = totalTimeDelta.seconds / 60
-        #seconds = totalTimeDelta.seconds
+        # hours = totalTimeDelta.seconds / 3600
+        # minutes = totalTimeDelta.seconds / 60
+        # seconds = totalTimeDelta.seconds
 
-        #Base.htmlReport.generateReport(str(str(hours) + 'h ' + str(minutes) + 'm ' + str(seconds) + ' secs'))
+        # self.htmlReport.generateReport(str(str(hours) + 'h ' + str(minutes) + 'm ' + str(seconds) + ' secs'))
 
+    @staticmethod
+    def make_sure_path_exists(path):
 
-
-    def make_sure_path_exists(self, path):
         try:
             os.makedirs(path)
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
 
+    def set_execution_start_time(self):
 
-    def setExecutionStartTime(self):
-        self.startExecutionStartTime = datetime.datetime.now()
+        self.start_execution_start_time = datetime.datetime.now()
 
+    def set_execution_end_time(self):
 
-    def setExecutionEndTime(self):
-        self.startExecutionEndTime = datetime.datetime.now()
+        self.start_execution_end_time = datetime.datetime.now()
+
 
 if __name__ == '__main__':
     Base().execute()

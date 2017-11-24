@@ -58,7 +58,7 @@ class Testcase:
         self.testStepCounter += 1
         if status == 'PASS':
             self.testStepPassCounter += 1
-            self.testStepLocal = TestcaseStep(self.testStepCounter, testStep,testDescription, status, screenshotName, timestamp)
+            self.testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
             self.testSteps.append(self.testStepLocal)
         elif status == 'FAIL':
             self.testStepFailCounter += 1

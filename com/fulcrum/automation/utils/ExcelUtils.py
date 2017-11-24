@@ -5,65 +5,67 @@ import openpyxl
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
 run_manager_file_path = os.path.join(parentDir, 'RunManager.xlsx')
-testdata_file_path = os.path.join(parentDir, 'TestData.xlsx')
+test_data_file_path = os.path.join(parentDir, 'TestData.xlsx')
 
 
 class ExcelTestDataAccess:
 
     def __init__(self):
-        self.workbook = openpyxl.load_workbook(testdata_file_path)
+        self.workbook = openpyxl.load_workbook(test_data_file_path)
 
-    def getWorkSheetObj(self, sheetName):
-        return self.workbook.get_sheet_by_name(sheetName)
+    def get_worksheet_obj(self, sheet_name):
+        return self.workbook.get_sheet_by_name(sheet_name)
 
-    def getMaxRow(self, worksheet):
+    @staticmethod
+    def get_max_row(worksheet):
         return worksheet.max_row
 
-    def getMaxColumn(self, worksheet):
+    @staticmethod
+    def get_max_column(worksheet):
         return worksheet.max_column
 
-    def getRowData(self, sheetName, currentTestcase):
+    def get_row_data(self, sheet_name, current_testcase):
 
-        worksheet = self.getWorkSheetObj(sheetName)
-        totalRows = self.getMaxRow(worksheet)
-        totalColumns = self.getMaxColumn(worksheet)
+        worksheet = self.get_worksheet_obj(sheet_name)
+        total_rows = self.get_max_row(worksheet)
+        total_columns = self.get_max_column(worksheet)
 
         data = {}
 
-        columnNames = self.getColumnNames(worksheet, totalColumns)
-        currentRow = self.getRowNumber(worksheet, totalRows, currentTestcase)
+        column_names = self.get_column_names(worksheet, total_columns)
+        current_row = self.get_row_number(worksheet, total_rows, current_testcase)
 
-        coulmnCounter = 0
+        column_counter = 0
 
-        for row in worksheet.iter_cols(min_row=currentRow, min_col=1, max_row=currentRow, max_col=totalColumns):
+        for row in worksheet.iter_cols(min_row=current_row, min_col=1, max_row=current_row, max_col=total_columns):
             for cell in row:
-                if cell.value != None:
-                    data[columnNames[coulmnCounter]] = cell.value
-                    coulmnCounter += 1
-        #print data
+                if cell.value is not None:
+                    data[column_names[column_counter]] = cell.value
+                    column_counter += 1
+        # print data
         return data
 
+    @staticmethod
+    def get_row_number(worksheet, total_rows, test_case_name):
 
-    def getRowNumber(self, worksheet, totalRows, testcasename):
+        current_row_number = 0
 
-        currentRowNumber = 0
-
-        for row in worksheet.iter_rows(min_row=2, min_col=1, max_row=totalRows, max_col=1):
+        for row in worksheet.iter_rows(min_row=2, min_col=1, max_row=total_rows, max_col=1):
             for cell in row:
-                if cell.value == testcasename:
-                    currentRowNumber = cell.row
+                if cell.value == test_case_name:
+                    current_row_number = cell.row
 
-        return currentRowNumber
+        return current_row_number
 
+    @staticmethod
+    def get_column_names(worksheet , total_columns):
 
-    def getColumnNames(self, worksheet , totalColumns):
+        column_names = []
 
-        columnNames = []
-
-        for row in worksheet.iter_cols(min_row=1, min_col=1, max_row=1, max_col=totalColumns):
+        for row in worksheet.iter_cols(min_row=1, min_col=1, max_row=1, max_col=total_columns):
             for cell in row:
-                columnNames.append(cell.value)
-        return  columnNames
+                column_names.append(cell.value)
+        return column_names
 
 
 class ExcelRunManagerAccess:
@@ -71,51 +73,52 @@ class ExcelRunManagerAccess:
     def __init__(self):
         self.workbook = openpyxl.load_workbook(run_manager_file_path)
 
-    def getWorkSheetObj(self, sheetName):
-        return self.workbook.get_sheet_by_name(sheetName)
+    def get_worksheet_obj(self, sheet_name):
+        return self.workbook.get_sheet_by_name(sheet_name)
 
-    def getMaxRow(self, worksheet):
+    @staticmethod
+    def get_max_row(worksheet):
         return worksheet.max_row
 
-    def getMaxColumn(self, worksheet):
+    @staticmethod
+    def get_max_column(worksheet):
         return worksheet.max_column
 
-    def getRunManagerInfo(self, sheetName):
+    def get_run_manager_info(self, sheet_name):
 
-        worksheet = self.getWorkSheetObj(sheetName)
-        totalRows = self.getMaxRow(worksheet)
-        totalColumns = self.getMaxColumn(worksheet)
+        worksheet = self.get_worksheet_obj(sheet_name)
+        total_rows = self.get_max_row(worksheet)
+        total_columns = self.get_max_column(worksheet)
 
-        runinfo = []
+        run_info = []
 
-        columnNames = self.getColumnNames(worksheet, totalColumns)
-        coulmnCounter = 0
-        rowCounter = 0
+        column_names = self.get_column_names(worksheet, total_columns)
+        column_counter = 0
+        row_counter = 0
 
-        for row in worksheet.iter_rows(min_row=2, min_col=1, max_row=totalRows, max_col=totalColumns):
-            rowdata = {}
+        for row in worksheet.iter_rows(min_row=2, min_col=1, max_row=total_rows, max_col=total_columns):
+            row_data = {}
             for cell in row:
-                if cell.value != None:
-                    rowdata[columnNames[coulmnCounter]] = cell.value
-                    coulmnCounter += 1
-            coulmnCounter = 0
-            if rowdata['EXECUTE'] != 'No':
-                runinfo.insert(rowCounter,rowdata)
-                rowCounter += 1
+                if cell.value is not None:
+                    row_data[column_names[column_counter]] = cell.value
+                    column_counter += 1
+            column_counter = 0
+            if row_data['EXECUTE'] != 'No':
+                run_info.insert(row_counter, row_data)
+                row_counter += 1
 
+        # print run_info
+        return run_info
 
-        #print runinfo
-        return runinfo
+    @staticmethod
+    def get_column_names(worksheet, total_columns):
 
+        column_names = []
 
-    def getColumnNames(self, worksheet , totalColumns):
-
-        columnNames = []
-
-        for row in worksheet.iter_cols(min_row=1, min_col=1, max_row=1, max_col=totalColumns):
+        for row in worksheet.iter_cols(min_row=1, min_col=1, max_row=1, max_col=total_columns):
             for cell in row:
-                columnNames.append(cell.value)
-        return  columnNames
+                column_names.append(cell.value)
+        return column_names
 
 
 
