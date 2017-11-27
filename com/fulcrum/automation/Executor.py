@@ -22,7 +22,7 @@ class ExecutorService:
 
     def get_keywords(self):
 
-        test_data_access = ExcelTestDataAccess()
+        test_data_access = ExcelTestDataAccess(self.framework_config)
         self.keywords = test_data_access.get_row_data('Keywords', self.test_parameters.get_test_case_id())
 
     def execute_keywords(self):

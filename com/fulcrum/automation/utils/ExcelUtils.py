@@ -4,14 +4,12 @@ import openpyxl
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
-run_manager_file_path = os.path.join(parentDir, 'RunManager.xlsx')
-test_data_file_path = os.path.join(parentDir, 'TestData.xlsx')
 
 
 class ExcelTestDataAccess:
 
-    def __init__(self):
-        self.workbook = openpyxl.load_workbook(test_data_file_path)
+    def __init__(self, framework_config):
+        self.workbook = openpyxl.load_workbook(os.path.join(parentDir,  framework_config.get('testdata.workbook')))
 
     def get_worksheet_obj(self, sheet_name):
         return self.workbook.get_sheet_by_name(sheet_name)
@@ -70,8 +68,8 @@ class ExcelTestDataAccess:
 
 class ExcelRunManagerAccess:
 
-    def __init__(self):
-        self.workbook = openpyxl.load_workbook(run_manager_file_path)
+    def __init__(self, framework_config):
+        self.workbook = openpyxl.load_workbook(os.path.join(parentDir, framework_config.get('run.manager')))
 
     def get_worksheet_obj(self, sheet_name):
         return self.workbook.get_sheet_by_name(sheet_name)

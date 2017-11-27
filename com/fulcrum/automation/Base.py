@@ -55,7 +55,7 @@ class Base:
 
     def collect_test_instances(self):
 
-        run_manager_access = ExcelRunManagerAccess()
+        run_manager_access = ExcelRunManagerAccess(self.framework_config)
         test_instances = run_manager_access.get_run_manager_info('RunManager')
         total_test_cases_to_execute = len(test_instances)
 
