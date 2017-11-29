@@ -1,6 +1,7 @@
 import os
 from webAppTests.BusinessComponents import BusinessComp
 from utils.ExcelUtils import ExcelTestDataAccess
+from mobileAppTests.AppiumTestSuite import TestSuite1
 
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
@@ -37,8 +38,8 @@ class ExecutorService:
                 obj = BusinessComp(self.driver, self.report)
                 names = dir(BusinessComp)
             elif 'Mobile App' == self.framework_config.get('testing.type'):
-                obj = BusinessComp()
-                names = dir(BusinessComp)
+                obj = TestSuite1(self.driver, self.report)
+                names = dir(TestSuite1)
 
             for name in names:
                 attr = getattr(obj, name)

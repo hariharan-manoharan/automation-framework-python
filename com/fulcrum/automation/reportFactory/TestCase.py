@@ -68,7 +68,7 @@ class Testcase:
 
     def addTestStepInfo(self, testStep, testDescription, status,  timestamp, screenshotName=''):
         self.testStepCounter += 1
-        if status == 'INFO':
+        if status == 'INFO' or status == 'PASS':
             self.testStepInfoCounter += 1
             testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
             self.testSteps.append(testStepLocal)

@@ -69,7 +69,7 @@ class Base:
 
     def initialize_report(self):
 
-        Base.htmlReport = HtmlReport(self.driver)
+        Base.htmlReport = HtmlReport(self.driver, self.framework_config)
 
     def create_browser_driver_object(self):
 
@@ -79,8 +79,8 @@ class Base:
 
     def create_android_driver_object(self):
 
-        self.android_driver_factory = AndroidDriverFactory.DriverScript(self.framework_config.get('remote.port'), self.framework_config)
-        # self.android_driver_factory.startAppiumServerInstance()
+        self.android_driver_factory = AndroidDriverFactory.DriverScript(self.framework_config)
+        #self.android_driver_factory.startAppiumServerInstance()
         self.android_driver_factory.setDriver()
         self.driver = self.android_driver_factory.getDriver()
 

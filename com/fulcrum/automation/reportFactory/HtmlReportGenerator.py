@@ -28,8 +28,9 @@ class HtmlReport:
 
     currentTestcase = ''
 
-    def __init__(self, driver):
+    def __init__(self, driver, framework_config):
         self.driver = driver
+        self.framework_config = framework_config
         self.copyReportTemplates()
         self.make_sure_path_exists('reports/' + 'Run-' + self.reportDir)
         self.make_sure_path_exists('reports/' + 'Run-' + self.reportDir + '/images')
@@ -53,7 +54,15 @@ class HtmlReport:
 
     def addTestStep(self, testStep, testDescription, status):
 
-        if status == 'PASS' or status == 'FAIL':
+        if status == 'PASS':
+            if self.framework_config.get('testing.type') == 'True':
+                screenshotName = self.takeScreenshot()
+                self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName + '.png',
+                                             str(datetime.now().strftime('%H:%M:%S')))
+            else:
+                self.currentTestcase.addTestStepInfo(testStep, testDescription, status,
+                                                     str(datetime.now().strftime('%H:%M:%S')))
+        elif status == 'FAIL':
             screenshotName = self.takeScreenshot()
             self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName + '.png',
                                              str(datetime.now().strftime('%H:%M:%S')))
