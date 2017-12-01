@@ -1,11 +1,11 @@
 import os
-from driverFactory import BrowserDriverFactory
-from driverFactory import AndroidDriverFactory
-from reportFactory.HtmlReportGenerator import HtmlReport
-from utils.FrameworkConfig import FrameworkConfigParser
-from utils.ExcelUtils import ExcelRunManagerAccess
-from TestParameters import TestParameters
-from Executor import ExecutorService
+from com.fulcrum.automation.driverFactory import BrowserDriverFactory
+from com.fulcrum.automation.driverFactory import AndroidDriverFactory
+from com.fulcrum.automation.reportFactory.HtmlReportGenerator import HtmlReport
+from com.fulcrum.automation.utils.FrameworkConfig import FrameworkConfigParser
+from com.fulcrum.automation.utils.ExcelUtils import ExcelRunManagerAccess
+from com.fulcrum.automation.TestParameters import TestParameters
+from com.fulcrum.automation.Executor import ExecutorService
 import errno
 import datetime
 

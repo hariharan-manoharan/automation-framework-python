@@ -70,6 +70,8 @@ class HtmlReport:
             self.currentTestcase.addTestStepInfo(testStep, testDescription, status,
                                                  str(datetime.now().strftime('%H:%M:%S')))
 
+        self.generateReportImmediateFlush()
+
 
     def generateReport(self, totalExecutionTime):
 

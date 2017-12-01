@@ -20,7 +20,7 @@
 
 </head>
 
-<body>
+<body class="dark">
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="./assets/img/sidebar-1.jpg">
         <!--
@@ -49,6 +49,8 @@
                         <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:green;" data-toggle="tooltip" title="pass">check_circle</i></p>
                         {% elif testcase.testcaseResult=='FAIL' %}
                         <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:red;"  data-toggle="tooltip" title="fail">error</i></p>
+                        {% elif testcase.testcaseResult=='' %}
+                        <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:blue;"  data-toggle="tooltip" title="running">play_arrow</i></p>
                         {% endif %}
                     </a>
                 </li>

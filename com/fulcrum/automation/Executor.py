@@ -49,7 +49,8 @@ class ExecutorService:
                     if self.is_method_found:
                         self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', 'INFO')
                         self.is_method_found = False
+
                     else:
                         self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', 'INFO')
+
         self.report.endTest()
-        self.report.generateReportImmediateFlush()
