@@ -1,12 +1,12 @@
 import os
-from reports import Report
-from TestStep import TestcaseStep
 from TestCase import Testcase
 from datetime import datetime
 import errno
 import shutil
 from jinja2 import Environment, FileSystemLoader
 import webbrowser
+from StatusEnum import Status
+
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -46,15 +46,15 @@ class HtmlReport:
         self.currentTestcase.setTotalTestExecutionTime()
         if self.currentTestcase.getTestStepFailCount() > 0:
             self.testcaseFailCounter += 1
-            self.currentTestcase.setTescaseResult('FAIL')
+            self.currentTestcase.setTescaseResult(Status.FAIL)
             self.failedTestCases.append(self.currentTestcase)
         else:
-            self.currentTestcase.setTescaseResult('PASS')
+            self.currentTestcase.setTescaseResult(Status.PASS)
             self.testcasePassCounter += 1
 
     def addTestStep(self, testStep, testDescription, status):
 
-        if status == 'PASS':
+        if status == Status.PASS:
             if self.framework_config.get('testing.type') == 'True':
                 screenshotName = self.takeScreenshot()
                 self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName + '.png',
@@ -62,16 +62,15 @@ class HtmlReport:
             else:
                 self.currentTestcase.addTestStepInfo(testStep, testDescription, status,
                                                      str(datetime.now().strftime('%H:%M:%S')))
-        elif status == 'FAIL':
+        elif status == Status.FAIL:
             screenshotName = self.takeScreenshot()
             self.currentTestcase.addTestStep(testStep, testDescription, status, screenshotName + '.png',
                                              str(datetime.now().strftime('%H:%M:%S')))
-        elif status == 'INFO':
+        elif status == Status.INFO:
             self.currentTestcase.addTestStepInfo(testStep, testDescription, status,
                                                  str(datetime.now().strftime('%H:%M:%S')))
 
         self.generateReportImmediateFlush()
-
 
     def generateReport(self, totalExecutionTime):
 

@@ -118,9 +118,9 @@ span.teststephover::after {
                  {% for testcase in testcases %}
                 <li>
                     <a href="./{{ testcase.testcaseId }}.html">
-                        {% if testcase.testcaseResult=='PASS' %}
+                        {% if testcase.testcaseResult.name=='PASS' %}
                         <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:green;" data-toggle="tooltip" title="pass">check_circle</i></p>
-                        {% elif testcase.testcaseResult=='FAIL' %}
+                        {% elif testcase.testcaseResult.name=='FAIL' %}
                         <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:red;"  data-toggle="tooltip" title="fail">error</i></p>
                         {% elif testcase.testcaseResult=='' %}
                         <p>{{ testcase.testcaseId }} <i class="material-icons" style="color:blue;"  data-toggle="tooltip" title="running">play_arrow</i></p>
@@ -168,11 +168,11 @@ span.teststephover::after {
                                  <tbody>
                                     {% for testStep in testSteps %}
                                     <tr id="{{ testStep.testStepCount }}">
-                                       {% if testStep.testStepResult=='PASS' %}
+                                       {% if testStep.testStepResult.name=='PASS' %}
                                        <td><i class="material-icons" style="color:green;" data-toggle="tooltip" title="pass">check_circle</i></td>
-                                       {% elif testStep.testStepResult=='FAIL' %}
+                                       {% elif testStep.testStepResult.name=='FAIL' %}
                                        <td><i class="material-icons" style="color:red;" data-toggle="tooltip" title="fail">error</i></td>
-                                       {% elif testStep.testStepResult=='INFO' %}
+                                       {% elif testStep.testStepResult.name=='INFO' %}
                                        <td><i class="material-icons" style="color:blue;" data-toggle="tooltip" title="info">info</i></td>
                                        {% endif %}
                                        <td>{{ testStep.testtTimestamp }}</td>

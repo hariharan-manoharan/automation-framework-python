@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from ..pageObjectRepository.CommonObjects import CommonObjects
 from selenium.webdriver.remote.webelement import WebElement
+from ...reportFactory.StatusEnum import Status
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -34,7 +35,7 @@ class WebReusableFunctions(CommonObjects):
     '''
     def enter_text_id(self, id_locator, field_name, text):
         self.driver.find_element_by_id(id_locator).send_keys(text)
-        self.report.addTestStep('enter_text_id', text + ' is entered in field ' + field_name, 'PASS')
+        self.report.addTestStep('enter_text_id', text + ' is entered in field ' + field_name, Status.PASS)
 
     '''
     Click element using id locator
@@ -45,7 +46,7 @@ class WebReusableFunctions(CommonObjects):
     def click_element_id(self, id_locator, object_name):
         self.element = self.wait.until(EC.element_to_be_clickable((By.ID, id_locator)))
         self.element.click()
-        self.report.addTestStep('click_element_id', object_name + ' is clicked', 'PASS')
+        self.report.addTestStep('click_element_id', object_name + ' is clicked', Status.PASS)
 
     '''
     Click element using xpath locator
@@ -59,9 +60,9 @@ class WebReusableFunctions(CommonObjects):
             if self.wait_until_element_is_present('XPATH',
                                                   '//div[@class=\'blocking-screen\']'):
                 self.element.click()
-                self.report.addTestStep('click_element_id', object_name + ' is clicked', 'PASS')
+                self.report.addTestStep('click_element_id', object_name + ' is clicked', Status.PASS)
         else:
-            self.report.addTestStep('click_element_id', object_name + ' is not clicked', 'FAIL')
+            self.report.addTestStep('click_element_id', object_name + ' is not clicked', Status.FAIL)
 
     '''
     Enter text in text box using name locator
@@ -72,7 +73,7 @@ class WebReusableFunctions(CommonObjects):
     '''
     def enter_text_name(self, name_locator, field_name, text):
         self.driver.find_element_by_name(name_locator).send_keys(text)
-        self.report.addTestStep('enter_text_name', text + ' is entered in field ' + field_name, 'PASS')
+        self.report.addTestStep('enter_text_name', text + ' is entered in field ' + field_name, Status.PASS)
 
     '''
     Click element using name locator
@@ -83,7 +84,7 @@ class WebReusableFunctions(CommonObjects):
     def click_element_name(self, name_locator, object_name):
         self.element = self.wait.until(EC.element_to_be_clickable(name_locator))
         self.element.click()
-        self.report.addTestStep('click_element_name', object_name + ' is clicked', 'PASS')
+        self.report.addTestStep('click_element_name', object_name + ' is clicked', Status.PASS)
 
     '''
     Launch web application with given url and checks its title once the web page is loaded completely
@@ -94,7 +95,7 @@ class WebReusableFunctions(CommonObjects):
     def get_url(self, url, title):
         self.driver.get(url)
         assert title in self.driver.title
-        self.report.addTestStep('get_url', 'Web app with URL ' + url + ' is launched successfully', 'PASS')
+        self.report.addTestStep('get_url', 'Web app with URL ' + url + ' is launched successfully', Status.PASS)
 
     '''
     Asserts the current web page title 
@@ -103,7 +104,7 @@ class WebReusableFunctions(CommonObjects):
     '''
     def assert_title(self, title):
         assert title in self.driver.title
-        self.report.addTestStep('assert_title', 'Title ' + title + ' is present', 'PASS')
+        self.report.addTestStep('assert_title', 'Title ' + title + ' is present', Status.PASS)
 
     '''
     Clicks "Data Forms" link in CATS Home page
@@ -115,7 +116,7 @@ class WebReusableFunctions(CommonObjects):
             (EC.element_to_be_clickable((By.XPATH, '// div[ @class =\'navbar-collapse collapse\'] / ul[1] / li[2] / a')))
         self.element.click()
         assert 'CATS CenterPoint: CenterPoint' in self.driver.title
-        self.report.addTestStep('click_data_forms_link', 'Clicked Data Forms link', 'PASS')
+        self.report.addTestStep('click_data_forms_link', 'Clicked Data Forms link', Status.PASS)
     '''
     Clicks given data form
 
@@ -130,11 +131,11 @@ class WebReusableFunctions(CommonObjects):
         self.element = self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, self.xpath_btn.format('Search'))))
         if self.element.is_displayed():
-            self.report.addTestStep('click_data_form', 'Clicked Data Form - ' + data_form_name, 'PASS')
+            self.report.addTestStep('click_data_form', 'Clicked Data Form - ' + data_form_name, Status.PASS)
         else:
             self.report.addTestStep('click_data_form',
                                     'Clicked Data Form - ' + data_form_name + '.'
-                                    'Search screen is not displayed', 'FAIL')
+                                    'Search screen is not displayed', Status.FAIL)
 
     def click_button_search(self, xpath_search):
 
@@ -143,13 +144,13 @@ class WebReusableFunctions(CommonObjects):
             self.element.click()
 
             if self.is_element_present('XPATH', self.xpath_btn.format('Clear Grid')):
-                self.report.addTestStep('click_button', 'Clicked button with text contains - Search', 'PASS')
+                self.report.addTestStep('click_button', 'Clicked button with text contains - Search', Status.PASS)
             else:
                 self.report.addTestStep('click_button',
-                                        'Click button with text contains - Search. Results screen is not displayed', 'FAIL')
+                                        'Click button with text contains - Search. Results screen is not displayed', Status.FAIL)
         else:
             self.report.addTestStep('click_button',
-                                    'Not Clicked button with text contains - Search.', 'FAIL')
+                                    'Not Clicked button with text contains - Search.', Status.FAIL)
 
     def enter_text_by_xpath(self, xpath, field_name, text):
 
@@ -160,10 +161,10 @@ class WebReusableFunctions(CommonObjects):
             self.element.clear()
             self.element.send_keys(text)
             self.report.addTestStep('enter_text_by_xpath',
-                                    text + ' is entered in field ' + field_name, 'PASS')
+                                    text + ' is entered in field ' + field_name, Status.PASS)
         else:
             self.report.addTestStep('enter_text_by_xpath',
-                                    text + ' is not entered in field ' + field_name, 'FAIL')
+                                    text + ' is not entered in field ' + field_name, Status.FAIL)
 
     def get_text_xpath(self, xpath, field_name):
 
@@ -173,11 +174,11 @@ class WebReusableFunctions(CommonObjects):
             text = self.driver.find_element_by_xpath(xpath.format(field_name)).get_attribute('value')
 
             self.report.addTestStep('get_text_xpath',
-                                    text + ' is returned from field ' + field_name, 'PASS')
+                                    text + ' is returned from field ' + field_name, Status.PASS)
             return text
         else:
             self.report.addTestStep('get_text_xpath',
-                                    'None is returned. Field '+field_name+' is not present', 'FAIL')
+                                    'None is returned. Field '+field_name+' is not present', Status.FAIL)
             return None
 
     def is_element_present(self, by, locator):
@@ -238,4 +239,4 @@ class WebReusableFunctions(CommonObjects):
         self.element = self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, '//div[contains(text(),\'' + folder_name + '\')]')))
         self.element.click()
-        self.report.addTestStep('click_data_forms_folder', 'Clicked Data Forms folder - ' + folder_name, 'PASS')
+        self.report.addTestStep('click_data_forms_folder', 'Clicked Data Forms folder - ' + folder_name, Status.PASS)

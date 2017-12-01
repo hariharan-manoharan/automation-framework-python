@@ -3,6 +3,7 @@ from ..reusableLibrary.CommonFuntions import WebReusableFunctions
 from ..pageObjectRepository.HomePageObjects import PageObjects
 from ..pageObjectRepository.CommonObjects import CommonObjects
 import random
+from ...reportFactory.StatusEnum import Status
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -39,13 +40,13 @@ class Home(WebReusableFunctions, PageObjects, CommonObjects):
             actual_serial_number = self.get_text_xpath(self.xpath_txt_field, 'Serial Number')
 
             if actual_serial_number == serial_number:
-                self.report.addTestStep('update_serial_number', 'Serial number is updated successfully', 'PASS')
+                self.report.addTestStep('update_serial_number', 'Serial number is updated successfully', Status.PASS)
             elif actual_serial_number is None:
-                self.report.addTestStep('update_serial_number', 'Given field (Serial Number) is not present in DOM.', 'FAIL')
+                self.report.addTestStep('update_serial_number', 'Given field (Serial Number) is not present in DOM.', Status.FAIL)
             else:
-                self.report.addTestStep('update_serial_number', 'Serial number is not updated successfully', 'FAIL')
+                self.report.addTestStep('update_serial_number', 'Serial number is not updated successfully', Status.FAIL)
 
         elif self.is_element_present('XPATH', self.xpath_div_contains_txt.format('ValidationException')):
 
             self.report.addTestStep('update_serial_number', 'Serial number is not updated successfully. '
-                                                            'Exception occurred while submitting transaction', 'FAIL')
+                                                            'Exception occurred while submitting transaction', Status.FAIL)

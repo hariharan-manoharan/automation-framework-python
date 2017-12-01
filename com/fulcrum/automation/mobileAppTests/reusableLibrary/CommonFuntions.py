@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import *
+from ...reportFactory.StatusEnum import Status
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -22,11 +23,11 @@ class MobileReusableFunctions:
     def click_element_id(self, id_locator):
         self.element = self.wait.until(EC.element_to_be_clickable((By.ID, id_locator)))
         self.element.click()
-        self.report.addTestStep('click_element_id', 'Click Element by ID', 'PASS')
+        self.report.addTestStep('click_element_id', 'Click Element by ID', Status.PASS)
 
     def enter_text_id(self, id_locator, field_name, text):
         self.driver.find_element_by_id(id_locator).send_keys(text)
-        self.report.addTestStep('enter_text_id', text + ' is entered in field ' + field_name, 'PASS')
+        self.report.addTestStep('enter_text_id', text + ' is entered in field ' + field_name, Status.PASS)
 
     def select_user_profile(self, profile):
         try:
@@ -39,12 +40,12 @@ class MobileReusableFunctions:
                 for element in elements:
                     if element.text == profile:
                         element.click()
-                        self.report.addTestStep('select_user_profile', 'Profile ' + profile + ' is selected', 'PASS')
+                        self.report.addTestStep('select_user_profile', 'Profile ' + profile + ' is selected', Status.PASS)
                         is_selected = True
                         break
 
             if not is_selected:
-                self.report.addTestStep('select_user_profile', 'Profile ' + profile + ' is not selected', 'FAIL')
+                self.report.addTestStep('select_user_profile', 'Profile ' + profile + ' is not selected', Status.FAIL)
 
         except TimeoutException as e:
             self.report.addTestStep('select_user_profile', 'Profile ' + profile + ' is not selected', 'FAIL')
@@ -59,15 +60,15 @@ class MobileReusableFunctions:
                 for element in elements:
                     if element.text == routine_folder:
                         element.click()
-                        self.report.addTestStep('select_routine_folder', 'Routine folder ' + routine_folder + ' is selected', 'PASS')
+                        self.report.addTestStep('select_routine_folder', 'Routine folder ' + routine_folder + ' is selected', Status.PASS)
                         is_selected = True
                         break
 
             if not is_selected:
-                self.report.addTestStep('select_routine_folder', 'Routine folder ' + routine_folder + ' is not selected', 'FAIL')
+                self.report.addTestStep('select_routine_folder', 'Routine folder ' + routine_folder + ' is not selected', Status.FAIL)
 
         except TimeoutException as e:
-            self.report.addTestStep('select_user_profile', 'Routine folder ' + routine_folder + ' is not selected', 'FAIL')
+            self.report.addTestStep('select_user_profile', 'Routine folder ' + routine_folder + ' is not selected', Status.FAIL)
 
     def select_routine(self, routine_folder, routine):
         try:
@@ -80,12 +81,12 @@ class MobileReusableFunctions:
                 for element in elements:
                     if element.text == routine:
                         element.click()
-                        self.report.addTestStep('select_routine', 'Routine ' + routine + ' is selected', 'PASS')
+                        self.report.addTestStep('select_routine', 'Routine ' + routine + ' is selected', Status.PASS)
                         is_selected = True
                         break
 
             if not is_selected:
-                self.report.addTestStep('select_routine', 'Routine ' + routine + ' is not selected', 'FAIL')
+                self.report.addTestStep('select_routine', 'Routine ' + routine + ' is not selected', Status.FAIL)
 
         except TimeoutException as e:
-            self.report.addTestStep('select_routine', 'Routine ' + routine + ' is not selected', 'FAIL')
+            self.report.addTestStep('select_routine', 'Routine ' + routine + ' is not selected', Status.FAIL)

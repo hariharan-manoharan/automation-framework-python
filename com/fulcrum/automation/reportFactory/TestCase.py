@@ -1,6 +1,7 @@
 import os
 from TestStep import TestcaseStep
 import datetime
+from StatusEnum import Status
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
@@ -56,11 +57,11 @@ class Testcase:
 
     def addTestStep(self, testStep, testDescription, status, screenshotName, timestamp):
         self.testStepCounter += 1
-        if status == 'PASS':
+        if status == Status.PASS:
             self.testStepPassCounter += 1
             testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
             self.testSteps.append(testStepLocal)
-        elif status == 'FAIL':
+        elif status == Status.FAIL:
             self.testStepFailCounter += 1
             testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
             self.testSteps.append(testStepLocal)
@@ -68,7 +69,7 @@ class Testcase:
 
     def addTestStepInfo(self, testStep, testDescription, status,  timestamp, screenshotName=''):
         self.testStepCounter += 1
-        if status == 'INFO' or status == 'PASS':
+        if status == Status.INFO or status == Status.PASS:
             self.testStepInfoCounter += 1
             testStepLocal = TestcaseStep(self.testStepCounter, testStep, testDescription, status, screenshotName, timestamp)
             self.testSteps.append(testStepLocal)

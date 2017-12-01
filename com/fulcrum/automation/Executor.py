@@ -2,6 +2,7 @@ import os
 from webAppTests.BusinessComponents import BusinessComp
 from utils.ExcelUtils import ExcelTestDataAccess
 from mobileAppTests.AppiumTestSuite import TestSuite1
+from .reportFactory.StatusEnum import Status
 
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
@@ -32,7 +33,7 @@ class ExecutorService:
 
             current_keyword = self.keywords['KEYWORD_'+str(i)]
 
-            self.report.addTestStep('Keyword', '<b>'+str(current_keyword).upper()+'</b>', 'INFO')
+            self.report.addTestStep('Keyword', '<b>'+str(current_keyword).upper()+'</b>', Status.INFO)
 
             if 'Web App' == self.framework_config.get('testing.type'):
                 obj = BusinessComp(self.driver, self.report)
@@ -47,10 +48,10 @@ class ExecutorService:
                     self.is_method_found = True
                     attr()
                     if self.is_method_found:
-                        self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', 'INFO')
+                        self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', Status.INFO)
                         self.is_method_found = False
 
                     else:
-                        self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', 'INFO')
+                        self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', Status.INFO)
 
         self.report.endTest()
