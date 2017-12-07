@@ -156,7 +156,7 @@ class HtmlReport:
 
     def copyReportTemplates(self):
 
-        source = 'reportFactory/templates'
+        source = 'framework/reportFactory/templates'
         destination = 'reports/' + 'Run-' + self.reportDir
 
         try:

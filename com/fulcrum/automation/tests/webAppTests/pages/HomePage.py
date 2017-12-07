@@ -1,9 +1,10 @@
 import os
-from ..reusableLibrary.CommonFuntions import WebReusableFunctions
-from ..pageObjectRepository.HomePageObjects import PageObjects
-from ..pageObjectRepository.CommonObjects import CommonObjects
 import random
-from ...reportFactory.StatusEnum import Status
+
+from com.fulcrum.automation.framework.reportFactory.StatusEnum import Status
+from ..pageObjectRepository.CommonObjects import CommonObjects
+from ..pageObjectRepository.HomePageObjects import PageObjects
+from ..reusableLibrary.CommonFuntions import WebReusableFunctions
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)

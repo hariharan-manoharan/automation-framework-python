@@ -1,9 +1,9 @@
 import os
-from webAppTests.BusinessComponents import BusinessComp
-from utils.ExcelUtils import ExcelTestDataAccess
-from mobileAppTests.AppiumTestSuite import TestSuite1
-from .reportFactory.StatusEnum import Status
 
+from com.fulcrum.automation.framework.reportFactory.StatusEnum import Status
+from com.fulcrum.automation.framework.utils.ExcelUtils import ExcelTestDataAccess
+from com.fulcrum.automation.tests.mobileAppTests.AppiumTestSuite import TestSuite1
+from com.fulcrum.automation.tests.webAppTests.BusinessComponents import BusinessComp
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)

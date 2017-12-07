@@ -1,7 +1,8 @@
 import os
-from ..reusableLibrary.CommonFuntions import WebReusableFunctions
+
+from com.fulcrum.automation.framework.utils.CookieHandler import CookieHandler
 from ..pageObjectRepository.LoginPageObjects import PageObjects
-from ...utils.CookieHandler import CookieHandler
+from ..reusableLibrary.CommonFuntions import WebReusableFunctions
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 parentDir = os.path.dirname(fileDir)
