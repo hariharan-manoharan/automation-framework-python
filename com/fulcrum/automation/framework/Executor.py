@@ -28,7 +28,7 @@ class ExecutorService:
         self.keywords = test_data_access.get_row_data('Keywords', self.test_parameters.get_test_case_id())
 
     def execute_keywords(self):
-        self.report.startTest(self.test_parameters.get_test_case_id(), self.test_parameters.get_test_description())
+        self.report.startTest(self.driver, self.test_parameters.get_test_case_id(), self.test_parameters.get_test_description())
         for i in range(1, len(self.keywords)):
 
             current_keyword = self.keywords['KEYWORD_'+str(i)]
@@ -53,5 +53,6 @@ class ExecutorService:
 
                     else:
                         self.report.addTestStep('Keyword', current_keyword + ' is executed successfully', Status.INFO)
+
 
         self.report.endTest()
