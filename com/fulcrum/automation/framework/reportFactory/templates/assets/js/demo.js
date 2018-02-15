@@ -4,7 +4,7 @@ demo = {
         var chart = new Chart(document.getElementById("pie-chart"), {
             type: 'doughnut',
             data: {
-                labels: ["pass", "fail"],
+                labels: ["pass %", "fail %"],
                 datasets: [{
                     label: "Tests view",
                     backgroundColor: ["#66FF66", "#FF3333"],

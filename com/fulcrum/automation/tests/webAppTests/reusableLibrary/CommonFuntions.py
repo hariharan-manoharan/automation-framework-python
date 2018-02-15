@@ -67,6 +67,21 @@ class WebReusableFunctions(CommonObjects):
             self.report.addTestStep('click_element_id', object_name + ' is not clicked', Status.FAIL)
 
     '''
+    Click element using xpath locator
+
+        :param str xpath_locator 
+        :param str object_name        
+    '''
+
+    def click_element_xpath_1(self, xpath_locator, object_name):
+        if self.is_element_clickable('XPATH', xpath_locator):
+            self.element = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath_locator)))
+            self.element.click()
+            self.report.addTestStep('click_element_id', object_name + ' is clicked', Status.PASS)
+        else:
+            self.report.addTestStep('click_element_id', object_name + ' is not clicked', Status.FAIL)
+
+    '''
     Enter text in text box using name locator
 
         :param str name_locator
@@ -242,3 +257,4 @@ class WebReusableFunctions(CommonObjects):
             (By.XPATH, '//div[contains(text(),\'' + folder_name + '\')]')))
         self.element.click()
         self.report.addTestStep('click_data_forms_folder', 'Clicked Data Forms folder - ' + folder_name, Status.PASS)
+

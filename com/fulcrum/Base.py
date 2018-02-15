@@ -32,7 +32,7 @@ class Base:
 
     def execute(self):
 
-        #try:
+        try:
             self.set_execution_start_time()
             self.make_sure_path_exists('reports')
             self.get_framework_config()
@@ -40,9 +40,9 @@ class Base:
             self.initialize_report()
             self. collect_test_instances()
             self.execute_test()
-        #except:
+        except:
             print 'Exception occurred in execute method'
-        #finally:
+        finally:
 
             self.set_execution_end_time()
             self.generate_report()

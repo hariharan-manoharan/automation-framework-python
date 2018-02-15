@@ -22,6 +22,8 @@ class CommonObjects:
         self.xpath_btn_popup_save = '//button[contains(text(),\'Save\')]'
         self.xpath_btn_popup_back = '//button[contains(text(),\'Back\')]'
         self.xpath_btn_popup_close = '//form[@class = \'dataform-form form\']//a[contains(text(),\'Close\')]'
+        self.xpath_btn_popup_clear = '//button[contains(text(),\'Clear\')]'
+        self.xpath_btn_popup_delete = '//button[contains(text(),\'Delete\')]'
 
         self.xpath_link_search_tab = '//li[@class=\'tab\']/a[contains(text(),\'Search\')]'
         self.xpath_link_results_tab = '//li[@class=\'tab\']/a[contains(text(),\'Results\')]'

@@ -199,7 +199,7 @@
     $(document).ready(function() {
 
         // Javascript method's body can be found in assets/js/demos.js
-        demo.initDocumentationCharts(parseInt({{ testsPassed }}),parseInt({{ testsFailed}}));
+        demo.initDocumentationCharts(parseInt({{ (testsPassed/totaltests)*100 }}),parseInt({{ (testsFailed/totaltests)*100 }}));
 
     });
 </script>
